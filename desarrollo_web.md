@@ -116,13 +116,25 @@
 
 ---
 
-## 8. Siguiente Fase: Fase 8 (Repositorio GitHub y Despliegue en Vercel)
+## 8. Avance de Fase 8: Repositorio Git y Despliegue en Vercel
 
-1. **Inicialización y Conexión de Repositorio Git:**
-   - Comprobar `.gitignore` (para excluir `.env.local`, `dist/`, `.astro/`, `node_modules/`).
-   - Vincular repositorio remoto en GitHub.
-2. **Despliegue a Producción en Vercel:**
-   - Configurar variables de entorno de producción en Vercel (`PUBLIC_SUPABASE_URL`, `PUBLIC_SUPABASE_ANON_KEY`).
-   - Validar que el dominio de producción despliegue las 8 rutas y active en vivo el widget de comentarios de Facebook.
+1. **Inicialización de Git Local (`COMPLETADA`):**
+   - Repositorio inicializado en rama `main`.
+   - Autor configurado: `YerayAnguiano <janguiano27@ucol.mx>`.
+   - Commit inicial registrado: `dca3fc1` (*54 archivos, 11,946 inserciones*).
+   - `.gitignore` verificado: `.env.local` y temporales de compilación debidamente protegidos y excluidos.
+2. **Paso Pendiente: Conexión a GitHub:**
+   - Crear repositorio en GitHub y ejecutar:
+     ```bash
+     git remote add origin https://github.com/<TU_USUARIO>/<TU_REPOSITORIO>.git
+     git push -u origin main
+     ```
+3. **Paso Pendiente: Despliegue en Vercel:**
+   - Importar repositorio desde Vercel Dashboard.
+   - Configurar variables de entorno de producción:
+     - `PUBLIC_SUPABASE_URL`
+     - `PUBLIC_SUPABASE_ANON_KEY`
+   - Desplegar para obtener URL con HTTPS y habilitar el widget oficial de Facebook Comments en vivo.
+
 
 

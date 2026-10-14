@@ -4,7 +4,7 @@ import tailwind from '@astrojs/tailwind';
 
 // https://astro.build/config
 export default defineConfig({
-  site: 'https://medichands.vercel.app',
+  site: 'https://medicommunity.vercel.app',
   integrations: [
     react(),
     tailwind({

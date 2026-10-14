@@ -53,15 +53,19 @@ export async function getPosts(): Promise<Post[]> {
       .eq('is_published', true)
       .order('published_at', { ascending: false });
 
-    if (error || !data || data.length === 0) {
-      console.warn('Usando publicaciones locales de respaldo (Supabase no retornó datos o error):', error?.message);
-      return MOCK_POSTS;
+    if (error) {
+      console.warn('Error en consulta de Supabase posts:', error.message);
+      return [];
+    }
+
+    if (!data || data.length === 0) {
+      return [];
     }
 
     return data.map(mapDbPostToPost);
   } catch (err) {
-    console.warn('Error conectando a Supabase, usando respaldo local:', err);
-    return MOCK_POSTS;
+    console.warn('Error conectando a Supabase para getPosts:', err);
+    return [];
   }
 }
 
@@ -79,14 +83,16 @@ export async function getPostBySlug(slug: string): Promise<Post | null> {
       .maybeSingle();
 
     if (error || !data) {
-      return MOCK_POSTS.find((p) => p.slug === slug) || null;
+      return null;
     }
 
     return mapDbPostToPost(data);
-  } catch {
-    return MOCK_POSTS.find((p) => p.slug === slug) || null;
+  } catch (err) {
+    console.warn('Error conectando a Supabase para getPostBySlug:', err);
+    return null;
   }
 }
+
 
 // 3. Crear una publicación (Exclusivo administradores autenticados)
 export async function createPost(post: Omit<Post, 'id' | 'likesCount'>): Promise<{ success: boolean; error?: string }> {

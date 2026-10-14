@@ -1,14 +1,31 @@
-import React, { useState, useMemo } from 'react';
+import React, { useState, useMemo, useEffect } from 'react';
 import type { Post, PostFilter } from '../../types';
 import { Search, Flame, Clock, Heart, ArrowRight } from 'lucide-react';
+import { getPosts } from '../../lib/supabase';
 
 interface PostFeedProps {
   posts: Post[];
 }
 
-export const PostFeed: React.FC<PostFeedProps> = ({ posts }) => {
+export const PostFeed: React.FC<PostFeedProps> = ({ posts: initialPosts }) => {
+  const [posts, setPosts] = useState<Post[]>(initialPosts);
   const [filter, setFilter] = useState<PostFilter>('recent');
   const [searchQuery, setSearchQuery] = useState('');
+
+  // Sincronización en vivo con Supabase en el navegador
+  useEffect(() => {
+    let isMounted = true;
+    const syncLivePosts = async () => {
+      const live = await getPosts();
+      if (isMounted) {
+        setPosts(live);
+      }
+    };
+    syncLivePosts();
+    return () => {
+      isMounted = false;
+    };
+  }, []);
 
   // Filtrado y ordenamiento dinámico
   const filteredPosts = useMemo(() => {

@@ -7,4 +7,4 @@ Disallow: /mh-admin-cdc-control/
 Disallow: /mh-admin-cdc-control
 
 # Sitemap
-Sitemap: https://medichands.vercel.app/sitemap-index.xml
+Sitemap: https://medicommunity.vercel.app/sitemap-index.xml
