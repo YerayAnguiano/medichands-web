@@ -51,11 +51,12 @@
 
 ## 3. Registro de Archivos del Proyecto
 
-### Modificados y Creados en Fase 5
-- `supabase/seed.sql`: Sembrado oficial de 4 artículos científicos en la base de datos remota de Supabase.
-- `supabase/migration_likes_toggle.sql`: Script de migración con las funciones RPC `get_post_likes_status` y `toggle_like`.
-- `supabase/schema.sql`: Actualizado con las definiciones canónicas de las nuevas funciones RPC.
-- `src/lib/supabase.ts`: Funciones `getPostLikesStatus` y `togglePostLike` agregadas y tipadas.
+### Modificados y Creados en Fase 8 (Markdown, Sincronización en Vivo y Despliegue)
+- `src/pages/post/[slug].astro`: Motor de renderizado Markdown completo con `marked.parse` y Tailwind Typography con soporte de imágenes (`prose-img`), encabezados jerárquicos (`h1`, `h2`, `h3`), citas (`blockquote`), listas y enlaces seguros.
+- `src/components/admin/AdminDashboard.tsx`: Editor interactivo con barra de herramientas Markdown, selector de pestañas (Escribir / Vista Previa en tiempo real), botón de subida de imágenes al bucket `covers` para intercalar imágenes entre párrafos (`![alt](url)`) e inserción por URL.
+- `src/components/home/PostFeed.tsx`: Re-sincronización viva en cliente para reflejar altas y bajas de publicaciones en tiempo real en `/`.
+- `package.json`: Incorporación de la dependencia `marked` para parseo estático y dinámico.
+- `src/lib/supabase.ts`: Funciones `getPostLikesStatus` y `togglePostLike` agregadas y tipadas; respeto a bases de datos vacías sin forzar mocks.
 - `src/components/post/LikeButton.tsx`: Botón interactivo con renderizado instantáneo desde `localStorage`, sincronización viva con Supabase y alternancia optimista bidireccional.
 - `src/components/post/FacebookComments.astro`: SDK oficial de Meta con inicialización `window.fbAsyncInit` y tarjeta informativa para navegadores con adblock.
 - `src/components/common/ShareModal.tsx`: Modal para compartir en Facebook, Twitter (X), Instagram y copiado al portapapeles.
