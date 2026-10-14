@@ -1,0 +1,114 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import { PostActions } from '../../components/post/PostActions';
+import FacebookComments from '../../components/post/FacebookComments.astro';
+import { getPosts } from '../../lib/supabase';
+import type { Post } from '../../types';
+
+export async function getStaticPaths() {
+  const posts = await getPosts();
+  return posts.map((post) => ({
+    params: { slug: post.slug },
+    props: { post },
+  }));
+}
+
+interface Props {
+  post: Post;
+}
+
+const { post } = Astro.props;
+
+const formattedDate = new Date(post.publishedAt).toLocaleDateString('es-MX', {
+  year: 'numeric',
+  month: 'long',
+  day: 'numeric',
+});
+
+const currentUrl = new URL(Astro.url.pathname, Astro.site || 'https://medichands.vercel.app').toString();
+---
+
+<BaseLayout
+  title={`${post.title} — MedicHands`}
+  description={post.excerpt}
+  image={post.coverImage}
+  type="article"
+>
+  <article class="max-w-3xl mx-auto py-6">
+    
+    <!-- Navegación de migas de pan -->
+    <nav class="flex items-center gap-2 text-xs text-mh-gray-500 mb-6" aria-label="Breadcrumb">
+      <a href="/" class="hover:text-mh-primary transition-colors">Inicio</a>
+      <span>/</span>
+      <span class="text-mh-primary font-semibold">{post.category}</span>
+    </nav>
+
+    <!-- Encabezado del Artículo -->
+    <header class="mb-8">
+      <div class="inline-flex items-center gap-2 text-xs font-bold uppercase tracking-wider text-mh-primary bg-mh-lavender-light px-3 py-1 rounded-full mb-3">
+        {post.category}
+      </div>
+
+      <h1 class="text-3xl sm:text-4xl lg:text-5xl font-display font-black text-mh-gray-900 leading-tight mb-4">
+        {post.title}
+      </h1>
+
+      <p class="text-base sm:text-lg text-mh-gray-700 leading-relaxed font-normal mb-6">
+        {post.excerpt}
+      </p>
+
+      <!-- Metadatos de Autor y Fecha -->
+      <div class="flex items-center justify-between py-4 border-t border-b border-mh-lavender-light text-xs text-mh-gray-500">
+        <div class="flex items-center gap-3">
+          <div class="w-9 h-9 rounded-full bg-mh-lavender border border-mh-primary/30 flex items-center justify-center font-bold text-mh-primary text-sm shadow-sm">
+            {post.authorName.charAt(0)}
+          </div>
+          <div>
+            <div class="font-bold text-sm text-mh-gray-900 flex items-center gap-1.5">
+              <span>{post.authorName}</span>
+              {post.isTeamAuthor ? (
+                <span class="text-[10px] bg-mh-lavender px-1.5 py-0.5 rounded text-mh-primary">Oficial</span>
+              ) : (
+                <span class="text-[10px] bg-mh-lavender-light px-1.5 py-0.5 rounded text-mh-primary">Investigador UDC</span>
+              )}
+            </div>
+            <span>{post.authorEmail}</span>
+          </div>
+        </div>
+
+        <div class="text-right">
+          <div class="font-semibold text-mh-gray-700">{formattedDate}</div>
+          <span>{post.readingTimeMinutes} min de lectura</span>
+        </div>
+      </div>
+    </header>
+
+    <!-- Imagen de Portada Principal -->
+    <div class="mb-10 rounded-2xl overflow-hidden bg-mh-lavender-light aspect-[16/9] border border-mh-lavender-light shadow-sm">
+      <img
+        src={post.coverImage}
+        alt={post.title}
+        class="w-full h-full object-cover"
+        loading="eager"
+      />
+    </div>
+
+    <!-- Contenido del Artículo -->
+    <div class="prose prose-neutral max-w-none prose-headings:font-display prose-headings:font-bold prose-headings:text-mh-gray-900 prose-a:text-mh-primary prose-strong:text-mh-gray-900 text-mh-gray-800 leading-relaxed text-base sm:text-lg">
+      <Fragment set:html={post.content.replace(/\n\n/g, '<p class="mb-5 leading-relaxed">').replace(/### (.*?)\n/g, '<h3 class="text-xl sm:text-2xl font-bold mt-8 mb-3 text-mh-gray-900">$1</h3>').replace(/> \*(.*?)\*/g, '<blockquote class="border-l-4 border-mh-primary pl-4 py-1 italic my-6 text-mh-gray-700 bg-mh-lavender-light/30 rounded-r-xl">$1</blockquote>')} />
+    </div>
+
+    <!-- Barra Interactiva de Acciones (Likes y Compartir) -->
+    <PostActions
+      client:load
+      postId={post.id}
+      initialLikes={post.likesCount}
+      title={post.title}
+      url={currentUrl}
+    />
+
+    <!-- Sección Oficial de Comentarios de Facebook -->
+    <FacebookComments canonicalUrl={currentUrl} />
+
+  </article>
+</BaseLayout>

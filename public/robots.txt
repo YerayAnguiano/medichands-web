@@ -1,0 +1,10 @@
+# https://www.robotstxt.org/robotstxt.html
+User-agent: *
+Allow: /
+
+# Proteger la consola administrativa del rastreo de motores de búsqueda
+Disallow: /mh-admin-cdc-control/
+Disallow: /mh-admin-cdc-control
+
+# Sitemap
+Sitemap: https://medichands.vercel.app/sitemap-index.xml

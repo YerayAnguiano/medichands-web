@@ -1,0 +1,59 @@
+---
+// Footer.astro - Pie editorial institucional
+---
+
+<footer class="mt-auto border-t border-mh-lavender-light bg-[#FEFEFE] py-12">
+  <div class="max-w-6xl mx-auto px-4 sm:px-6">
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-8 mb-8">
+      
+      <!-- Columna 1: Identidad -->
+      <div>
+        <div class="flex items-center gap-2 mb-3">
+          <img src="/logo.ico" alt="Logo de MedicHands" class="w-7 h-7 object-contain shadow-sm rounded p-0.5 bg-mh-lavender border border-mh-lavender" />
+          <span class="font-display font-black text-lg text-mh-primary">MEDICHANDS</span>
+        </div>
+        <p class="text-sm text-mh-gray-500 leading-relaxed">
+          Plataforma de divulgación científica y triaje preventivo continuo de la salud mamaria. Desarrollado en la Facultad de Ingeniería Mecánica y Eléctrica de la Universidad de Colima (UCol).
+        </p>
+      </div>
+
+      <!-- Columna 2: Enlaces Rápidos -->
+      <div>
+        <h4 class="text-xs font-bold uppercase tracking-wider text-mh-gray-900 mb-3">Navegación</h4>
+        <ul class="space-y-2 text-sm text-mh-gray-700">
+          <li><a href="/" class="hover:text-mh-primary transition-colors">Inicio y Publicaciones</a></li>
+          <li><a href="/quienes-somos" class="hover:text-mh-primary transition-colors">¿Quiénes somos? y Misión</a></li>
+          <li><a href="/bitacora" class="hover:text-mh-primary transition-colors">Bitácora Técnica e Historia</a></li>
+        </ul>
+      </div>
+
+      <!-- Columna 3: Apoyo y Comunidad -->
+      <div>
+        <h4 class="text-xs font-bold uppercase tracking-wider text-mh-gray-900 mb-3">Participación UDC</h4>
+        <p class="text-sm text-mh-gray-500 mb-3">
+          Súmate al voluntariado de pruebas de ergonomía en campus o impulsa la fabricación de prototipos.
+        </p>
+        <div class="flex flex-wrap gap-2">
+          <span class="inline-flex items-center text-xs font-semibold px-2.5 py-1 rounded bg-mh-lavender-light text-mh-primary">
+            UCol FIME
+          </span>
+          <span class="inline-flex items-center text-xs font-semibold px-2.5 py-1 rounded bg-mh-lavender-light text-mh-primary">
+            MAX30205 Sensor
+          </span>
+          <span class="inline-flex items-center text-xs font-semibold px-2.5 py-1 rounded bg-mh-lavender-light text-mh-primary">
+            TPU 3D
+          </span>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- Barra Inferior -->
+    <div class="pt-6 border-t border-mh-lavender-light flex flex-col sm:flex-row items-center justify-between text-xs text-mh-gray-500 gap-3">
+      <p>© 2026 MedicHands. Todos los derechos reservados. Proyecto de divulgación sin fines de lucro directo.</p>
+      <p class="text-mh-gray-500">
+        Dispositivo de triaje preventivo no diagnóstico · Basado en <span class="font-medium text-mh-primary">Acea Nebril (2011)</span>
+      </p>
+    </div>
+  </div>
+</footer>

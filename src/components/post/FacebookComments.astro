@@ -1,0 +1,96 @@
+---
+interface Props {
+  canonicalUrl: string;
+}
+
+const { canonicalUrl } = Astro.props;
+---
+
+<section class="mt-12 pt-8 border-t border-mh-lavender-light">
+  <div class="mb-6">
+    <div class="flex items-center gap-2 mb-1">
+      <div class="w-2.5 h-2.5 rounded-full bg-mh-primary"></div>
+      <h3 class="text-xl font-display font-bold text-mh-gray-900">
+        Comentarios y Discusión
+      </h3>
+    </div>
+    <p class="text-xs text-mh-gray-500">
+      Participa en la conversación iniciando sesión con tu cuenta de Facebook. Los comentarios son moderados por el equipo de MedicHands.
+    </p>
+  </div>
+
+  <!-- Contenedor del SDK de Facebook -->
+  <div id="fb-root"></div>
+  <script is:inline>
+    window.fbAsyncInit = function() {
+      if (window.FB) {
+        window.FB.init({
+          xfbml: true,
+          version: 'v19.0'
+        });
+        window.FB.XFBML.parse();
+      }
+    };
+    (function(d, s, id){
+       var js, fjs = d.getElementsByTagName(s)[0];
+       if (d.getElementById(id)) {return;}
+       js = d.createElement(s); js.id = id;
+       js.src = "https://connect.facebook.net/es_LA/sdk.js#xfbml=1&version=v19.0";
+       fjs.parentNode.insertBefore(js, fjs);
+     }(document, 'script', 'facebook-jssdk'));
+  </script>
+
+  <!-- Caja oficial de comentarios de Facebook -->
+  <div class="rounded-2xl border border-mh-lavender bg-[#FEFEFE] p-4 sm:p-6 shadow-sm overflow-hidden min-h-[160px] flex flex-col justify-center relative">
+    <div
+      class="fb-comments w-full"
+      data-href={canonicalUrl}
+      data-width="100%"
+      data-numposts="5"
+      data-order-by="reverse_time"
+    ></div>
+
+    <!-- Estado alternativo visual ante bloqueo por AdBlockers / Brave Shields -->
+    <div
+      id="fb-adblock-fallback"
+      class="hidden p-6 rounded-xl bg-mh-lavender-light/40 border border-mh-lavender text-center space-y-3"
+    >
+      <div class="w-10 h-10 rounded-full bg-mh-lavender flex items-center justify-center text-mh-primary mx-auto">
+        <svg class="w-5 h-5 fill-none stroke-current" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"/>
+        </svg>
+      </div>
+      <h4 class="text-sm font-bold text-mh-gray-900">
+        Módulo de comentarios no disponible
+      </h4>
+      <p class="text-xs text-mh-gray-600 max-w-md mx-auto leading-relaxed">
+        El plugin social de Facebook fue bloqueado por una extensión de privacidad o protección de rastreo (ej. Brave Shields, uBlock Origin). Para leer o publicar comentarios comunitarios, permite el acceso a Facebook en este sitio.
+      </p>
+    </div>
+
+    <!-- Mensaje accesible en caso de JavaScript deshabilitado -->
+    <noscript>
+      <div class="text-xs text-mh-gray-500 text-center py-4 bg-mh-lavender-light/30 rounded-xl">
+        Para ver y publicar comentarios se requiere JavaScript habilitado y acceso a la plataforma de Facebook.
+      </div>
+    </noscript>
+  </div>
+
+  <p class="text-[11px] text-mh-gray-500 mt-2 text-center">
+    Plataforma de comentarios impulsada por Facebook Social Plugins · Respetamos las pautas comunitarias de la UDC.
+  </p>
+</section>
+
+<script is:inline>
+  // Detección proactiva de bloqueo de script de Facebook
+  setTimeout(() => {
+    const commentsEl = document.querySelector('.fb-comments');
+    const fallbackEl = document.getElementById('fb-adblock-fallback');
+    const hasIframe = commentsEl && commentsEl.querySelector('iframe');
+    
+    // Si tras 3.2 segundos no existe window.FB o no se renderizó el iframe
+    if (fallbackEl && (!window.FB || !hasIframe)) {
+      fallbackEl.classList.remove('hidden');
+    }
+  }, 3200);
+</script>

@@ -1,0 +1,195 @@
+/* src/components/bitacora/bitacora.css */
+
+.bitacora-wrapper {
+  --color-primary: #8a0073;
+  --color-primary-hover: #6e005c;
+  --color-secondary: #992173;
+  --color-secondary-hover: #7b165b;
+  --color-background: #ffffff;
+  --color-surface: #ffffff;
+  --color-text: #1e293b;
+  --color-muted: #64748b;
+  --color-border: #e2e8f0;
+  --font-main: 'Inter', system-ui, -apple-system, sans-serif;
+  --border-radius: 16px;
+  --transition: 0.3s ease;
+  --container-max-width: 1200px;
+  
+  font-family: var(--font-main);
+  background-color: var(--color-background);
+  color: var(--color-text);
+  line-height: 1.6;
+}
+
+.bitacora-wrapper * {
+  box-sizing: border-box;
+}
+
+.bitacora-wrapper .container {
+  max-width: var(--container-max-width);
+  margin: 0 auto;
+  padding: 0 1.5rem;
+}
+
+.bitacora-wrapper .section {
+  padding: 4.5rem 0;
+}
+
+/* Header de la Bitácora */
+.bitacora-header {
+  position: sticky;
+  top: 0;
+  width: 100%;
+  background-color: rgba(254, 254, 254, 0.95);
+  backdrop-filter: blur(8px);
+  padding: 1rem 0;
+  z-index: 50;
+  border-bottom: 1px solid var(--color-border);
+  transition: all 0.3s ease;
+}
+
+.bitacora-header .header-content {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.bitacora-header .logo {
+  font-size: 1.35rem;
+  font-weight: 700;
+  color: var(--color-primary);
+  text-decoration: none;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.bitacora-header .nav {
+  display: flex;
+  align-items: center;
+  gap: 1.5rem;
+}
+
+.bitacora-header .nav-list {
+  display: flex;
+  list-style: none;
+  gap: 1.25rem;
+  margin: 0;
+  padding: 0;
+}
+
+.bitacora-header .nav-list a {
+  text-decoration: none;
+  color: var(--color-text);
+  font-size: 0.875rem;
+  font-weight: 600;
+  transition: color 0.2s ease;
+}
+
+.bitacora-header .nav-list a:hover {
+  color: var(--color-primary);
+}
+
+.bitacora-header .menu-toggle {
+  display: none;
+  background: none;
+  border: none;
+  font-size: 1.5rem;
+  color: var(--color-text);
+  cursor: pointer;
+}
+
+@media (max-width: 768px) {
+  .bitacora-header .menu-toggle {
+    display: block;
+  }
+
+  .bitacora-header .nav {
+    position: absolute;
+    top: 100%;
+    left: 0;
+    width: 100%;
+    background-color: #ffffff;
+    flex-direction: column;
+    padding: 1.5rem;
+    box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+    transform: translateY(-150%);
+    opacity: 0;
+    visibility: hidden;
+    transition: all 0.3s ease;
+  }
+
+  .bitacora-header .nav.open {
+    transform: translateY(0);
+    opacity: 1;
+    visibility: visible;
+  }
+
+  .bitacora-header .nav-list {
+    flex-direction: column;
+    align-items: center;
+    width: 100%;
+    gap: 1rem;
+  }
+}
+
+/* Botones */
+.bitacora-wrapper .btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0.65rem 1.25rem;
+  border-radius: var(--border-radius);
+  font-weight: 600;
+  font-size: 0.875rem;
+  text-decoration: none;
+  cursor: pointer;
+  border: none;
+  transition: all var(--transition);
+}
+
+.bitacora-wrapper .btn-primary {
+  background-color: var(--color-primary);
+  color: white;
+  box-shadow: 0 2px 4px rgba(138, 0, 115, 0.2);
+}
+
+.bitacora-wrapper .btn-primary:hover {
+  background-color: var(--color-primary-hover);
+  transform: translateY(-1px);
+}
+
+.bitacora-wrapper .btn-secondary {
+  background-color: #f7eef5;
+  color: var(--color-primary);
+  border: 1px solid var(--color-primary);
+}
+
+.bitacora-wrapper .btn-secondary:hover {
+  background-color: var(--color-primary);
+  color: white;
+}
+
+/* Tarjetas */
+.bitacora-wrapper .card {
+  background-color: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: var(--border-radius);
+  padding: 1.5rem;
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.04);
+  transition: transform var(--transition), box-shadow var(--transition);
+}
+
+.bitacora-wrapper .card:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.08);
+}
+
+/* Grids */
+.bitacora-wrapper .grid-2 { display: grid; grid-template-columns: 1fr; gap: 2rem; }
+.bitacora-wrapper .grid-3 { display: grid; grid-template-columns: 1fr; gap: 2rem; }
+
+@media (min-width: 768px) {
+  .bitacora-wrapper .grid-2 { grid-template-columns: repeat(2, 1fr); }
+  .bitacora-wrapper .grid-3 { grid-template-columns: repeat(3, 1fr); }
+}

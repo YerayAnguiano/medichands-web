@@ -1,0 +1,81 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+---
+
+<BaseLayout
+  title="¿Quiénes somos? — MedicHands"
+  description="Conoce el origen, misión, equipo y fundamento científico de MedicHands en la Universidad de Colima."
+>
+  <div class="max-w-3xl mx-auto py-8">
+    
+    <!-- Encabezado con Logo Oficial -->
+    <header class="mb-10 text-center sm:text-left">
+      <div class="flex items-center gap-3 mb-4">
+        <img src="/logo.ico" alt="Logo de MedicHands" class="w-12 h-12 sm:w-14 sm:h-14 object-contain shadow-sm rounded-xl p-1 bg-mh-lavender-light border border-mh-lavender" />
+        <span class="inline-flex items-center text-xs font-bold uppercase tracking-wider text-mh-primary bg-mh-lavender-light px-3 py-1 rounded-full">
+          Identidad y Misión
+        </span>
+      </div>
+      <h1 class="text-3xl sm:text-5xl font-display font-black text-mh-gray-900 leading-tight mb-4">
+        ¿Quiénes somos?
+      </h1>
+      <p class="text-base sm:text-xl text-mh-gray-700 leading-relaxed">
+        Democratizando el triaje preventivo de la salud mamaria mediante ingeniería biomédica, cómputo en el borde e innovación desde la Universidad de Colima.
+      </p>
+    </header>
+
+    <!-- Sección Misión y Visión -->
+    <section class="space-y-6 text-mh-gray-800 leading-relaxed text-base sm:text-lg mb-12">
+      <p>
+        <strong>MedicHands</strong> es una iniciativa de tecnología médica (<em>HealthTech</em>) e Internet de las Cosas Médicas (<em>IoMT</em>) desarrollada en el seno de la Facultad de Ingeniería Mecánica y Eléctrica (FIME) de la <strong>Universidad de Colima (UCol)</strong>.
+      </p>
+      
+      <p>
+        El proyecto nace como respuesta a un desafío crítico de salud pública: en México, los tumores malignos de mama representan la principal causa de muerte por cáncer en mujeres mayores de 60 años. Si bien la mastografía se mantiene como el estándar de oro clínico, presenta barreras severas de costo, disponibilidad geográfica, dolor físico por compresión tisular e invasividad con radiación ionizante, además de una menor sensibilidad en mamas de tejido denso.
+      </p>
+
+      <div class="my-8 p-6 rounded-2xl bg-mh-lavender-light/40 border border-mh-lavender">
+        <h3 class="text-lg font-display font-bold text-mh-primary mb-2">Nuestra Misión</h3>
+        <p class="text-sm sm:text-base text-mh-gray-800 leading-relaxed">
+          Proveer a las mujeres un sistema de triaje preclínico continuo, no invasivo y biomecánicamente confortable, que permita identificar oportunamente asimetrías térmicas superficiales asociadas al desarrollo tumoral mamario, empoderando a las usuarias desde la privacidad de su hogar y fomentando la consulta médica temprana.
+        </p>
+      </div>
+
+
+    <!-- Sección Bitácora Técnica con Botón Descubrir Más -->
+    <section id="bitacora" class="p-8 rounded-2xl bg-gradient-to-br from-mh-lavender-light to-white border border-mh-lavender shadow-sm">
+      <h2 class="text-2xl font-display font-black text-mh-primary mb-2">
+        Bitácora Técnica y Roadmap
+      </h2>
+      <p class="text-sm text-mh-gray-700 leading-relaxed mb-6">
+        Consulta el estado de avance de la arquitectura de software (migración a Android Nativo en Kotlin y Flutter Escritorio), la síntesis del artículo científico publicado y el plan de negocio a 5 años del proyecto.
+      </p>
+
+      <div class="space-y-3 mb-6 text-xs text-mh-gray-600">
+        <div class="flex items-center gap-2">
+          <span class="w-2 h-2 rounded-full bg-mh-green"></span>
+          <span><strong>Fase 1 (Completada):</strong> Publicación científica y validación del motor de asimetría térmica (94.2% precisión).</span>
+        </div>
+        <div class="flex items-center gap-2">
+          <span class="w-2 h-2 rounded-full bg-mh-primary"></span>
+          <span><strong>Fase 2 (En curso):</strong> Prototipado de copas TPU 3D, sensor MAX30205 y portal web de divulgación para la comunidad UDC.</span>
+        </div>
+        <div class="flex items-center gap-2">
+          <span class="w-2 h-2 rounded-full bg-mh-gray-300"></span>
+          <span><strong>Fase 3 (Siguiente):</strong> Ensayos físicos en modelos de silicona y validación clínica en hospitales colaboradores.</span>
+        </div>
+      </div>
+
+      <a
+        href="/bitacora"
+        class="inline-flex items-center gap-2 px-5 py-2.5 rounded-xl font-bold text-xs bg-mh-primary text-mh-white hover:bg-mh-primary-dark transition-all shadow"
+      >
+        <span>Descubrir más</span>
+        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3" />
+        </svg>
+      </a>
+    </section>
+
+  </div>
+</BaseLayout>

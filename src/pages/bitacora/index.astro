@@ -1,0 +1,13 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import { BitacoraApp } from '../../components/bitacora/BitacoraApp';
+---
+
+<BaseLayout
+  title="Bitácora Técnica e Historia — MedicHands"
+  description="Conoce la historia, obstáculos, validación en el CITCA y divulgación científica del proyecto MedicHands (Universidad de Colima)."
+  hideHeaderFooter={true}
+  fullWidth={true}
+>
+  <BitacoraApp client:load />
+</BaseLayout>

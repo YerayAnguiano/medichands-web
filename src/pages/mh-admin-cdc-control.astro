@@ -1,0 +1,14 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import { AdminAuthGuard } from '../components/admin/AdminAuthGuard';
+---
+
+<BaseLayout
+  title="Consola de Control CDC — MedicHands"
+  description="Acceso privado exclusivo para la administración de artículos de divulgación de MedicHands."
+>
+  <div class="py-4">
+    <!-- Componente React de Autenticación y Dashboard -->
+    <AdminAuthGuard client:only="react" />
+  </div>
+</BaseLayout>
