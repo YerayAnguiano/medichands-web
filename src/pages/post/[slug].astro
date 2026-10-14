@@ -4,6 +4,7 @@ import { PostActions } from '../../components/post/PostActions';
 import FacebookComments from '../../components/post/FacebookComments.astro';
 import { getPosts } from '../../lib/supabase';
 import type { Post } from '../../types';
+import { marked } from 'marked';
 
 export async function getStaticPaths() {
   const posts = await getPosts();
@@ -26,6 +27,9 @@ const formattedDate = new Date(post.publishedAt).toLocaleDateString('es-MX', {
 });
 
 const currentUrl = new URL(Astro.url.pathname, Astro.site || 'https://medicommunity.vercel.app').toString();
+
+// Parse Markdown content to clean HTML
+const htmlContent = marked.parse(post.content || '');
 ---
 
 <BaseLayout
@@ -93,9 +97,9 @@ const currentUrl = new URL(Astro.url.pathname, Astro.site || 'https://medicommun
       />
     </div>
 
-    <!-- Contenido del Artículo -->
-    <div class="prose prose-neutral max-w-none prose-headings:font-display prose-headings:font-bold prose-headings:text-mh-gray-900 prose-a:text-mh-primary prose-strong:text-mh-gray-900 text-mh-gray-800 leading-relaxed text-base sm:text-lg">
-      <Fragment set:html={post.content.replace(/\n\n/g, '<p class="mb-5 leading-relaxed">').replace(/### (.*?)\n/g, '<h3 class="text-xl sm:text-2xl font-bold mt-8 mb-3 text-mh-gray-900">$1</h3>').replace(/> \*(.*?)\*/g, '<blockquote class="border-l-4 border-mh-primary pl-4 py-1 italic my-6 text-mh-gray-700 bg-mh-lavender-light/30 rounded-r-xl">$1</blockquote>')} />
+    <!-- Contenido del Artículo con Soporte Completo Markdown e Imágenes -->
+    <div class="prose prose-neutral max-w-none prose-headings:font-display prose-headings:font-bold prose-headings:text-mh-gray-900 prose-a:text-mh-primary prose-a:underline hover:prose-a:text-mh-primary-dark prose-strong:text-mh-gray-900 text-mh-gray-800 leading-relaxed text-base sm:text-lg prose-img:rounded-2xl prose-img:shadow-md prose-img:border prose-img:border-mh-lavender-light prose-img:my-8 prose-img:w-full prose-img:max-h-[520px] prose-img:object-cover prose-blockquote:border-l-4 prose-blockquote:border-mh-primary prose-blockquote:bg-mh-lavender-light/30 prose-blockquote:rounded-r-xl prose-blockquote:py-2 prose-blockquote:px-4 prose-blockquote:italic prose-ul:list-disc prose-ol:list-decimal">
+      <Fragment set:html={htmlContent} />
     </div>
 
     <!-- Barra Interactiva de Acciones (Likes y Compartir) -->

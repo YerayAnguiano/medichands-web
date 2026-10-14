@@ -1,8 +1,12 @@
-import { useState, useEffect, type FC, type ChangeEvent, type FormEvent } from 'react';
+import { useState, useEffect, useRef, type FC, type ChangeEvent, type FormEvent } from 'react';
 import type { Post } from '../../types';
 import { supabase, createPost, updatePost, deletePost, uploadCoverImage } from '../../lib/supabase';
 import { ADMIN_AUTHORS, TEAM_AUTHOR_NAME, resolveAuthorName } from '../../lib/authors';
-import { Plus, Edit3, Trash2, LogOut, Image, Eye, CheckCircle2, AlertCircle } from 'lucide-react';
+import { 
+  Plus, Edit3, Trash2, LogOut, Image, Eye, CheckCircle2, AlertCircle,
+  Bold, Italic, Heading2, Heading3, List, Quote, Link2, ImageIcon, UploadCloud
+} from 'lucide-react';
+import { marked } from 'marked';
 
 interface AdminDashboardProps {
   userEmail: string;
@@ -21,13 +25,19 @@ export const AdminDashboard: FC<AdminDashboardProps> = ({ userEmail, onLogout }:
   const [excerpt, setExcerpt] = useState('');
   const [content, setContent] = useState('');
   const [coverImage, setCoverImage] = useState('');
-  const [category, setCategory] = useState('Investigación UCol');
+  const [category, setCategory] = useState('Investigación');
   const [isTeamAuthor, setIsTeamAuthor] = useState(false);
   const [isPublished, setIsPublished] = useState(true);
   const [readingTime, setReadingTime] = useState(3);
   const [uploadingImage, setUploadingImage] = useState(false);
   const [formError, setFormError] = useState('');
   const [saving, setSaving] = useState(false);
+
+  // Pestañas de Markdown y subida de imágenes en contenido
+  const [contentTab, setContentTab] = useState<'write' | 'preview'>('write');
+  const [uploadingContentImage, setUploadingContentImage] = useState(false);
+  const textareaRef = useRef<HTMLTextAreaElement>(null);
+  const contentImageFileInputRef = useRef<HTMLInputElement>(null);
 
   // Cargar publicaciones
   const loadPosts = async () => {
@@ -91,11 +101,12 @@ export const AdminDashboard: FC<AdminDashboardProps> = ({ userEmail, onLogout }:
     setExcerpt('');
     setContent('');
     setCoverImage('https://images.unsplash.com/photo-1576091160399-112ba8d25d1d?auto=format&fit=crop&w=1200&q=80');
-    setCategory('Investigación UCol');
+    setCategory('Investigación');
     setIsTeamAuthor(false);
     setIsPublished(true);
     setReadingTime(4);
     setFormError('');
+    setContentTab('write');
     setIsModalOpen(true);
   };
 
@@ -112,10 +123,11 @@ export const AdminDashboard: FC<AdminDashboardProps> = ({ userEmail, onLogout }:
     setIsPublished(post.isPublished !== false);
     setReadingTime(post.readingTimeMinutes);
     setFormError('');
+    setContentTab('write');
     setIsModalOpen(true);
   };
 
-  // Subir imagen de archivo
+  // Subir imagen de portada principal
   const handleFileChange = async (e: ChangeEvent<HTMLInputElement>) => {
     if (!e.target.files || e.target.files.length === 0) return;
     const file = e.target.files[0];
@@ -126,8 +138,52 @@ export const AdminDashboard: FC<AdminDashboardProps> = ({ userEmail, onLogout }:
     if (res.url) {
       setCoverImage(res.url);
     } else {
-      setFormError(res.error || 'Error subiendo imagen al storage.');
+      setFormError(res.error || 'Error subiendo imagen de portada al storage.');
     }
+  };
+
+  // Asistente para insertar sintaxis Markdown en la posición actual del cursor
+  const insertMarkdown = (prefix: string, suffix: string = '', defaultText: string = '') => {
+    const textarea = textareaRef.current;
+    if (!textarea) {
+      setContent((prev) => prev + prefix + defaultText + suffix);
+      return;
+    }
+    const start = textarea.selectionStart;
+    const end = textarea.selectionEnd;
+    const selectedText = content.substring(start, end) || defaultText;
+    const replacement = prefix + selectedText + suffix;
+    const newContent = content.substring(0, start) + replacement + content.substring(end);
+    setContent(newContent);
+    setTimeout(() => {
+      textarea.focus();
+      textarea.setSelectionRange(start + prefix.length, start + prefix.length + selectedText.length);
+    }, 40);
+  };
+
+  // Subir imagen para insertar dentro del contenido (Markdown)
+  const handleContentImageUpload = async (e: ChangeEvent<HTMLInputElement>) => {
+    if (!e.target.files || e.target.files.length === 0) return;
+    const file = e.target.files[0];
+    setUploadingContentImage(true);
+    setFormError('');
+    const res = await uploadCoverImage(file);
+    setUploadingContentImage(false);
+    if (res.url) {
+      const altDesc = file.name.replace(/\.[^/.]+$/, '').replace(/[-_]/g, ' ') || 'Imagen del artículo';
+      insertMarkdown(`\n\n![${altDesc}](`, `${res.url})\n\n`, '');
+    } else {
+      setFormError(res.error || 'Error al subir la imagen para el contenido.');
+    }
+    if (e.target) e.target.value = '';
+  };
+
+  // Insertar imagen por URL directa
+  const handleInsertImageUrl = () => {
+    const url = window.prompt('Pega la URL de la imagen que deseas insertar:');
+    if (!url || !url.trim()) return;
+    const alt = window.prompt('Texto descriptivo / pie de foto (opcional):') || 'Imagen del artículo';
+    insertMarkdown(`\n\n![${alt.trim()}](`, `${url.trim()})\n\n`, '');
   };
 
   // Guardar publicación
@@ -464,9 +520,9 @@ export const AdminDashboard: FC<AdminDashboardProps> = ({ userEmail, onLogout }:
                     onChange={(e) => setCategory(e.target.value)}
                     className="w-full text-xs p-2.5 rounded-xl border border-mh-lavender bg-mh-lavender-light/20 text-mh-gray-900 focus:outline-none focus:border-mh-primary"
                   >
-                    <option value="Investigación UCol">Investigación UCol</option>
+                    <option value="Investigación">Investigación</option>
                     <option value="Ingeniería de Hardware">Ingeniería de Hardware</option>
-                    <option value="Fundamento Científico">Fundamento Científico</option>
+                    <option value="Articulo Científico">Articulo Científico</option>
                     <option value="Prevención Comunitaria">Prevención Comunitaria</option>
                     <option value="Noticias">Noticias</option>
                   </select>
@@ -534,19 +590,178 @@ export const AdminDashboard: FC<AdminDashboardProps> = ({ userEmail, onLogout }:
                 />
               </div>
 
-              {/* Contenido Enriquecido */}
+              {/* Contenido con Soporte Completo Markdown, Barra de Herramientas y Vista Previa */}
               <div>
-                <label className="block text-xs font-bold uppercase tracking-wider text-mh-gray-700 mb-1">
-                  Contenido Completo (Markdown / HTML) *
-                </label>
-                <textarea
-                  required
-                  rows={8}
-                  value={content}
-                  onChange={(e) => setContent(e.target.value)}
-                  className="w-full text-xs p-2.5 rounded-xl border border-mh-lavender bg-mh-lavender-light/20 text-mh-gray-900 focus:outline-none focus:border-mh-primary font-mono text-[11px]"
-                  placeholder="Escribe el artículo usando Markdown: ### Subtítulo, > Cita, **Negrita**..."
-                />
+                <div className="flex items-center justify-between mb-2">
+                  <label className="block text-xs font-bold uppercase tracking-wider text-mh-gray-700">
+                    Contenido del Artículo (Markdown) *
+                  </label>
+
+                  {/* Selector de Pestañas: Escribir / Vista Previa */}
+                  <div className="flex items-center bg-mh-lavender-light/50 p-1 rounded-xl border border-mh-lavender">
+                    <button
+                      type="button"
+                      onClick={() => setContentTab('write')}
+                      className={`flex items-center gap-1.5 px-3 py-1 rounded-lg text-xs font-bold transition-all ${
+                        contentTab === 'write'
+                          ? 'bg-white text-mh-primary shadow-xs'
+                          : 'text-mh-gray-600 hover:text-mh-primary'
+                      }`}
+                    >
+                      <Edit3 className="w-3.5 h-3.5" />
+                      Escribir
+                    </button>
+                    <button
+                      type="button"
+                      onClick={() => setContentTab('preview')}
+                      className={`flex items-center gap-1.5 px-3 py-1 rounded-lg text-xs font-bold transition-all ${
+                        contentTab === 'preview'
+                          ? 'bg-white text-mh-primary shadow-xs'
+                          : 'text-mh-gray-600 hover:text-mh-primary'
+                      }`}
+                    >
+                      <Eye className="w-3.5 h-3.5" />
+                      Vista Previa
+                    </button>
+                  </div>
+                </div>
+
+                {contentTab === 'write' ? (
+                  <div className="rounded-xl border border-mh-lavender overflow-hidden bg-white focus-within:border-mh-primary transition-colors">
+                    {/* Barra de Herramientas Markdown */}
+                    <div className="flex flex-wrap items-center gap-1 p-2 bg-mh-lavender-light/40 border-b border-mh-lavender text-mh-gray-700 text-xs">
+                      <button
+                        type="button"
+                        onClick={() => insertMarkdown('## ', '\n', 'Título de Sección')}
+                        className="p-1.5 rounded-lg hover:bg-white hover:text-mh-primary transition-colors font-bold"
+                        title="Encabezado H2 (## Título)"
+                        aria-label="Encabezado 2"
+                      >
+                        <Heading2 className="w-4 h-4" />
+                      </button>
+                      <button
+                        type="button"
+                        onClick={() => insertMarkdown('### ', '\n', 'Subtítulo')}
+                        className="p-1.5 rounded-lg hover:bg-white hover:text-mh-primary transition-colors font-bold"
+                        title="Subencabezado H3 (### Subtítulo)"
+                        aria-label="Encabezado 3"
+                      >
+                        <Heading3 className="w-4 h-4" />
+                      </button>
+                      <div className="w-px h-4 bg-mh-lavender mx-1" />
+                      <button
+                        type="button"
+                        onClick={() => insertMarkdown('**', '**', 'texto en negrita')}
+                        className="p-1.5 rounded-lg hover:bg-white hover:text-mh-primary transition-colors font-bold"
+                        title="Negrita (**texto**)"
+                        aria-label="Negrita"
+                      >
+                        <Bold className="w-4 h-4" />
+                      </button>
+                      <button
+                        type="button"
+                        onClick={() => insertMarkdown('*', '*', 'texto en cursiva')}
+                        className="p-1.5 rounded-lg hover:bg-white hover:text-mh-primary transition-colors italic"
+                        title="Cursiva (*texto*)"
+                        aria-label="Cursiva"
+                      >
+                        <Italic className="w-4 h-4" />
+                      </button>
+                      <button
+                        type="button"
+                        onClick={() => insertMarkdown('> ', '\n', 'Cita o frase destacada')}
+                        className="p-1.5 rounded-lg hover:bg-white hover:text-mh-primary transition-colors"
+                        title="Cita destacada (> cita)"
+                        aria-label="Cita"
+                      >
+                        <Quote className="w-4 h-4" />
+                      </button>
+                      <button
+                        type="button"
+                        onClick={() => insertMarkdown('- ', '\n', 'Elemento de lista')}
+                        className="p-1.5 rounded-lg hover:bg-white hover:text-mh-primary transition-colors"
+                        title="Lista de viñetas (- elemento)"
+                        aria-label="Lista con viñetas"
+                      >
+                        <List className="w-4 h-4" />
+                      </button>
+                      <button
+                        type="button"
+                        onClick={() => insertMarkdown('[', '](https://...)', 'Texto del enlace')}
+                        className="p-1.5 rounded-lg hover:bg-white hover:text-mh-primary transition-colors"
+                        title="Enlace web ([texto](url))"
+                        aria-label="Enlace"
+                      >
+                        <Link2 className="w-4 h-4" />
+                      </button>
+
+                      <div className="w-px h-4 bg-mh-lavender mx-1" />
+
+                      {/* Botón para subir e insertar imagen en el contenido */}
+                      <label 
+                        className={`inline-flex items-center gap-1.5 px-2.5 py-1 rounded-lg text-xs font-semibold cursor-pointer transition-colors ${
+                          uploadingContentImage 
+                            ? 'bg-mh-lavender text-mh-primary animate-pulse'
+                            : 'bg-white hover:bg-mh-lavender-light text-mh-primary border border-mh-lavender/60'
+                        }`}
+                        title="Subir archivo de imagen e insertarla donde esté el cursor"
+                      >
+                        <UploadCloud className="w-3.5 h-3.5" />
+                        <span>{uploadingContentImage ? 'Subiendo imagen...' : 'Subir Imagen'}</span>
+                        <input
+                          ref={contentImageFileInputRef}
+                          type="file"
+                          accept="image/*"
+                          onChange={handleContentImageUpload}
+                          disabled={uploadingContentImage}
+                          className="hidden"
+                        />
+                      </label>
+
+                      {/* Botón para insertar imagen por URL */}
+                      <button
+                        type="button"
+                        onClick={handleInsertImageUrl}
+                        className="inline-flex items-center gap-1 px-2 py-1 rounded-lg text-xs font-semibold hover:bg-white hover:text-mh-primary transition-colors text-mh-gray-700"
+                        title="Insertar imagen desde enlace web URL (![alt](url))"
+                        aria-label="Insertar imagen por URL"
+                      >
+                        <ImageIcon className="w-3.5 h-3.5" />
+                        <span>URL Imagen</span>
+                      </button>
+                    </div>
+
+                    <textarea
+                      ref={textareaRef}
+                      required
+                      rows={10}
+                      value={content}
+                      onChange={(e) => setContent(e.target.value)}
+                      className="w-full text-xs p-3.5 bg-transparent text-mh-gray-900 focus:outline-none font-mono text-[11px] leading-relaxed resize-y"
+                      placeholder="Escribe el artículo usando Markdown. Puedes insertar imágenes entre párrafos usando el botón 'Subir Imagen' o con la sintaxis: ![Descripción](https://...)"
+                    />
+                  </div>
+                ) : (
+                  /* Vista Previa Renderizada */
+                  <div className="w-full min-h-[260px] max-h-[420px] overflow-y-auto p-5 rounded-xl border border-mh-lavender bg-[#FCFCFD]">
+                    {content.trim() ? (
+                      <div 
+                        className="prose prose-neutral max-w-none prose-headings:font-display prose-headings:font-bold prose-headings:text-mh-gray-900 prose-a:text-mh-primary prose-a:underline hover:prose-a:text-mh-primary-dark prose-strong:text-mh-gray-900 text-mh-gray-800 leading-relaxed text-sm prose-img:rounded-xl prose-img:shadow-sm prose-img:border prose-img:border-mh-lavender-light prose-img:my-4 prose-img:w-full prose-img:max-h-64 prose-img:object-cover prose-blockquote:border-l-4 prose-blockquote:border-mh-primary prose-blockquote:bg-mh-lavender-light/30 prose-blockquote:rounded-r-lg prose-blockquote:py-1.5 prose-blockquote:px-3 prose-blockquote:italic prose-ul:list-disc prose-ol:list-decimal"
+                        dangerouslySetInnerHTML={{ __html: marked.parse(content) as string }} 
+                      />
+                    ) : (
+                      <div className="flex flex-col items-center justify-center py-12 text-center text-mh-gray-400">
+                        <Eye className="w-8 h-8 mb-2 opacity-50" />
+                        <p className="text-xs italic">Aún no hay contenido escrito. Cambia a la pestaña "Escribir" para redactar tu artículo con Markdown.</p>
+                      </div>
+                    )}
+                  </div>
+                )}
+                
+                <p className="text-[11px] text-mh-gray-500 mt-1.5 flex items-center gap-1">
+                  <span>💡</span>
+                  <span>Soporta sintaxis Markdown completa: encabezados (##), negritas (**), listas (-), citas (&gt;) e imágenes (![alt](url)).</span>
+                </p>
               </div>
 
               {/* Botones Modal */}
