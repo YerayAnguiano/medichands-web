@@ -40,9 +40,9 @@ export const values = [
 ];
 
 export const team = [
-  { name: 'Citlalli Sarai Rivera Escareño', role: 'Investigadora y Desarrolladora', img: imagenc },
-  { name: 'Jetzael Yeray Anguiano Solis', role: 'Investigador y Desarrollador', img: imageny },
-  { name: 'Efraín Alejandro Arias Meza', role: 'Investigador y Desarrollador', img: imagene },
+  { name: 'Citlalli Sarai Rivera Escareño', role: 'Investigadora y Desarrolladora', contact: 'crivera14@ucol.mx', img: imagenc },
+  { name: 'Jetzael Yeray Anguiano Solis', role: 'Investigador y Desarrollador', contact: 'janguiano27@ucol.mx', img: imageny },
+  { name: 'Efraín Alejandro Arias Meza', role: 'Investigador y Desarrollador', contact: 'earias7@ucol.mx', img: imagene },
 ];
 
 export const valueProps = [
@@ -94,7 +94,7 @@ export const difusionItems = [
     type: 'Artículo de Investigación (CITCA 2026)',
     title: 'Asynchronous Monitoring System for Thermal Anomalies Associated with Breast Tumor Formation',
     desc: 'Publicado en el 6to Congreso Internacional de Tecnología y Ciencia Aplicada (CITCA), validando la asimetría térmica contralateral con 94.2% de precisión técnica.',
-    link: '#',
+    link: 'https://jcyta.cenidet.tecnm.mx/revistas/tycap/16-Vol9_Num1_Enero-Junio_2026.pdf',
     linkText: 'Leer Artículo',
   },
   {
@@ -111,4 +111,18 @@ export const difusionItems = [
     link: 'https://www.facebook.com/story.php?story_fbid=1723715019755712&id=100063516915637',
     linkText: 'Leer Nota',
   },
+  {
+    type: 'Charla Universitaria',
+    title: 'Charla Ingeniería que Cuida: señales que pueden cambiar una vida',
+    desc: 'Durante la semana de lucha contra el Cáncer de Mama, la ponente Citlalli Escareño presenta el proyecto MedicHands y la importancia de la detección temprana y aplicación de la tecnología en el cuidado de la salud.',
+    link: 'https://tesis-kappa.vercel.app/workshopDetail/charla_ingenieria_que_cuida_senales_que_pueden_cambiar_una_vida_6acd63df1b0ebb220745a3e5',
+    linkText: 'Ver Evento',
+  },  
+  {
+    type: 'Lanzamiento Oficial de MediCommunity',
+    title: 'Lanzamiento Oficial de Canal de difusión MediCommunity',
+    desc: 'Lanzamiento del canal de difusión MediCommunity, espacio para compartir información sobre la detección temprana del cáncer de mama, tips de salud y bienestar.',
+    link: 'https://medicommunity.vercel.app/',
+    linkText: 'Visitar sitio',
+  },  
 ];
