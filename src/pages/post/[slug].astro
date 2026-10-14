@@ -1,24 +1,24 @@
 ---
+export const prerender = false;
+
 import BaseLayout from '../../layouts/BaseLayout.astro';
 import { PostActions } from '../../components/post/PostActions';
 import FacebookComments from '../../components/post/FacebookComments.astro';
-import { getPosts } from '../../lib/supabase';
+import { getPostBySlug } from '../../lib/supabase';
 import type { Post } from '../../types';
 import { marked } from 'marked';
 
-export async function getStaticPaths() {
-  const posts = await getPosts();
-  return posts.map((post) => ({
-    params: { slug: post.slug },
-    props: { post },
-  }));
+const { slug } = Astro.params;
+
+if (!slug) {
+  return Astro.redirect('/');
 }
 
-interface Props {
-  post: Post;
-}
+const post = await getPostBySlug(slug);
 
-const { post } = Astro.props;
+if (!post) {
+  return Astro.redirect('/');
+}
 
 const formattedDate = new Date(post.publishedAt).toLocaleDateString('es-MX', {
   year: 'numeric',
