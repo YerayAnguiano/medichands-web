@@ -1,5 +1,7 @@
 ---
 import BaseLayout from '../layouts/BaseLayout.astro';
+import { team } from '../components/bitacora/content';
+import '../components/bitacora/bitacora.css';
 ---
 
 <BaseLayout
@@ -102,6 +104,58 @@ import BaseLayout from '../layouts/BaseLayout.astro';
           <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3" />
         </svg>
       </a>
+    </section>
+
+    <!-- Sección del Equipo Detrás de MedicHands -->
+    <section class="bitacora-wrapper mt-16 pt-12 border-t border-mh-lavender-light">
+      <div class="max-w-3xl mx-auto">
+        <div class="text-center mb-10">
+          <span class="inline-flex items-center text-xs font-bold uppercase tracking-wider text-mh-primary bg-mh-lavender-light px-3 py-1 rounded-full mb-3">
+            Investigación y Desarrollo
+          </span>
+          <h2 class="text-2xl sm:text-3xl font-display font-black text-mh-gray-900">
+            El Equipo Detrás de MedicHands
+          </h2>
+          <p class="text-sm text-mh-gray-500 mt-2 max-w-lg mx-auto">
+            Un equipo comprometido con la salud mamaria.
+          </p>
+        </div>
+
+        <div class="grid grid-cols-1 sm:grid-cols-3 gap-6 grid-3">
+          {team.map((member) => (
+            <div class="card text-center p-6 bg-white rounded-2xl border border-mh-lavender hover:border-mh-primary/50 shadow-xs hover:shadow-md hover:-translate-y-1 transition-all flex flex-col items-center">
+              <div class="w-24 h-24 rounded-full overflow-hidden mb-4 border-2 border-mh-lavender shadow-md bg-mh-lavender-light flex-shrink-0">
+                <img
+                  src={member.img}
+                  alt={`Fotografía de ${member.name}`}
+                  class="w-full h-full object-cover"
+                  loading="lazy"
+                />
+              </div>
+              <h3 class="font-display font-bold text-sm text-mh-gray-900 mb-1">
+                {member.name}
+              </h3>
+              <p class="text-xs text-mh-primary font-semibold mb-2">
+                {member.role}
+              </p>
+              <a
+                href={`mailto:${member.contact}`}
+                class="inline-flex items-center gap-1.5 text-xs text-mh-gray-500 hover:text-mh-primary transition-colors mb-2 group"
+                title={`Enviar correo a ${member.name}`}
+              >
+                <svg class="w-3.5 h-3.5 fill-none stroke-current" viewBox="0 0 24 24" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                  <rect width="20" height="16" x="2" y="4" rx="2"></rect>
+                  <path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7"></path>
+                </svg>
+                <span class="underline underline-offset-2">{member.contact}</span>
+              </a>
+              <span class="text-[11px] text-mh-gray-400 font-medium">
+                Universidad de Colima (UCol)
+              </span>
+            </div>
+          ))}
+        </div>
+      </div>
     </section>
 
   </div>

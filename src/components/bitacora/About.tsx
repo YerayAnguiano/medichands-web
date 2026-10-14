@@ -89,6 +89,7 @@ export const About: React.FC = () => {
                 <p className="text-xs text-mh-primary font-semibold mb-2">
                   {member.role}
                 </p>
+                <a href={`mailto:${member.contact}`} className="text-xs text-mh-gray-500 hover:text-mh-primary transition-colors">{member.contact}</a>
                 <span className="text-[11px] text-mh-gray-500">
                   Universidad de Colima (UCol)
                 </span>
